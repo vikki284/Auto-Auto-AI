@@ -1,0 +1,59 @@
+import car
+import time
+from random import randint
+
+# Main loop
+while True:
+    # Capture a frame from the camera
+    frame = car.capture()
+
+    # Detect pedestrians in the frame
+    pedestrians_detected = car.detect_pedestrians(frame)
+
+    # Stream the frame to some external system (e.g., display or analysis system)
+    car.stream(frame, to_labs=True)
+
+    # Check if pedestrians are detected
+    if pedestrians_detected:
+        # Honk for 3 seconds
+        car.honk(3)
+        
+# Lambda function to generate a random pixel value
+        randpixel = lambda: [randint(0, 1) for i in range(2)]
+
+# Generate a random pixel value
+        pixel_value = randpixel()
+
+# Generate a random number (either 0 or 1) to determine left or right
+        turn_direction = randint(0, 1)
+
+# Check the generated random number
+        if turn_direction == 1:
+    # Turn left
+            car.reverse(0.4)
+            car.left(0.4)
+        else:
+    # Turn right
+            car.reverse(0.4)
+            car.right(0.4)
+
+
+        # Move forward for 0.2 units (distance to move away)
+        car.forward(0.25)
+
+       
+
+    else:
+        # Check if stop sign is detected
+        stop_sign_detected = car.detect_stop_signs(frame)
+
+        if stop_sign_detected:
+            # Stop the car
+            car.stop()
+
+            # Sleep to ensure the car remains stopped
+            time.sleep(5)
+
+        else:
+            # If no pedestrians or stop sign detected, continue moving forward
+            car.forward(0.25)
